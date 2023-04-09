@@ -4,8 +4,8 @@
 
 void print_martix(int** matrix, int row, int column){
     printf("matrix \n");
-    for(int i = 0; i < row ; i++){
-        for(int j = 0; j < column; j++){
+    for(int i = 0; i < row ; i++){ //1행부터 row행 까지 출력
+        for(int j = 0; j < column; j++){ //1열부터 column열까지 출력
             printf("%d ", matrix[i][j] );
         }
         printf("\n");
@@ -14,23 +14,23 @@ void print_martix(int** matrix, int row, int column){
 }
 void free_matrix(int ** matrix, int row){
 
-        for(int i=0; i<row; i++)
-            free(matrix[i]);
-        free(matrix);
+        for(int i=0; i<row; i++) 
+            free(matrix[i]); //할당된 메모리 해제
+        free(matrix); //할당된 메모리 해제
 }
 
 void addition_matrix(int **A, int **B, int A_n, int A_m, int B_n, int B_m){
     if(A_n != B_n || A_m != B_m){
-        printf("A and B cannot be added \n");
+        printf("A and B cannot be added \n"); //더할 수 없는 행렬인 경우 출력
         
     }
     else{
-        int ** added_matrix = (int **)malloc(sizeof(int *) * A_n);
+        int ** added_matrix = (int **)malloc(sizeof(int *) * A_n); //A+B의 값을 저장하기 위한 새로운 배열을 만듬
         
         for (int i =0; i < A_n; i++){
-            added_matrix[i] = (int *)malloc(sizeof(int) * A_m);
+            added_matrix[i] = (int *)malloc(sizeof(int) * A_m); //A+B의 값을 저장하기 위한 새로운 배열을 만듬
             for(int j =0; j< A_m; j++){
-                added_matrix[i][j] = A[i][j] + B[i][j];
+                added_matrix[i][j] = A[i][j] + B[i][j]; //A의 i행 j열과 B의 i행 j열을 더하고 그 값을 added_matrix에 할당.
             }
         }
         print_martix(added_matrix, A_n, A_m);
@@ -40,16 +40,16 @@ void addition_matrix(int **A, int **B, int A_n, int A_m, int B_n, int B_m){
 
 void subtraction_matrix(int **A, int **B, int A_n, int A_m, int B_n, int B_m){
     if(A_n != B_n || A_m != B_m){
-        printf("A and B cannot be subtracted \n");
+        printf("A and B cannot be subtracted \n"); //뺄 수 없는 행렬인 경우 출력
         
     }
     else{
-        int ** subtracted_matrix = (int **)malloc(sizeof(int *) * A_n);
+        int ** subtracted_matrix = (int **)malloc(sizeof(int *) * A_n); //A-B의 값을 저장하기 위한 새로운 배열을 만듬.
         
         for (int i =0; i < A_n; i++){
-            subtracted_matrix[i] = (int *)malloc(sizeof(int) * A_m);
+            subtracted_matrix[i] = (int *)malloc(sizeof(int) * A_m); //A-B의 값을 저장하기 위한 새로운 배열을 만듬.
             for(int j =0; j< A_m; j++){
-                subtracted_matrix[i][j] = A[i][j] - B[i][j];
+                subtracted_matrix[i][j] = A[i][j] - B[i][j]; //A-B의 행렬 값을 subtracted_matrix에 저장.
             }
         }
         print_martix(subtracted_matrix, A_n, A_m);
@@ -58,13 +58,13 @@ void subtraction_matrix(int **A, int **B, int A_n, int A_m, int B_n, int B_m){
 }
 
 void transpose_matrix(int **matrix,int row,int column){
-    int ** transpose_matrix = (int**)malloc(sizeof(int*) * column);
+    int ** transpose_matrix = (int**)malloc(sizeof(int*) * column); //전치 행렬을 만들기 위한 배열을 만듬
     for(int i =0; i < column; i++){
-        transpose_matrix[i] = (int*)malloc(sizeof(int) * row);
+        transpose_matrix[i] = (int*)malloc(sizeof(int) * row); //전치행렬을 만들기 위한 배열을 만듬
     }
     for(int i = 0;i < row; i++){
         for(int j=0; j < column; j++){
-            transpose_matrix[j][i] = matrix[i][j];
+            transpose_matrix[j][i] = matrix[i][j]; //matrix의 i행 j열을 transpose_matrix의 j행 i열에 할당
         }
     }
     print_martix(transpose_matrix, column, row);
@@ -73,16 +73,16 @@ void transpose_matrix(int **matrix,int row,int column){
 
 void multiply_matrix(int **A, int **B, int A_n, int A_m, int B_n, int B_m){
     if(A_m != B_n){
-        printf("A cannot be multiplied by B \n");
+        printf("A cannot be multiplied by B \n"); //행렬의 곱이 불가한 경우 출력
         
     }
-    int **multiply_matrix = (int **)malloc(sizeof(int*) * A_n);
+    int **multiply_matrix = (int **)malloc(sizeof(int*) * A_n); //행렬의 곱의 결과를 저장할 배열 생성
     for(int i =0; i < A_n; i++){
-        multiply_matrix[i] = (int *)malloc(sizeof(int) * B_m);
+        multiply_matrix[i] = (int *)malloc(sizeof(int) * B_m); //행렬의 곱의 결과를 저장할 배열 생성
         for(int j=0; j< B_m; j++){
-            multiply_matrix[i][j] = 0;
+            multiply_matrix[i][j] = 0; //행렬의 곱을 저장할 배열을 초기화해줌.
             for(int k=0; k < B_n; k++){
-                multiply_matrix[i][j] += A[i][k] * B[k][j];
+                multiply_matrix[i][j] += A[i][k] * B[k][j]; // 행렬의 곱의 결과를 저장함.
             }
             
         }
@@ -99,24 +99,24 @@ int main(){
     printf("input B matrix size : ");
     scanf("%d %d", &B_n, &B_m);
 
-    int ** A_martix = (int **)malloc(sizeof(int *) * A_n);
-    int ** B_martix = (int **)malloc(sizeof(int *) * B_n);
+    int ** A_martix = (int **)malloc(sizeof(int *) * A_n); //행렬 A의 행
+    int ** B_martix = (int **)malloc(sizeof(int *) * B_n); //행렬 B의 행
     
     for(int i =0; i <A_n; i++){
-        A_martix[i] = (int *)malloc(sizeof(int)* A_m);
+        A_martix[i] = (int *)malloc(sizeof(int)* A_m); //행렬 A의 열
     }
     for(int i=0; i< B_n; i++){
 
-        B_martix[i] = (int *)malloc(sizeof(int)* B_m);
+        B_martix[i] = (int *)malloc(sizeof(int)* B_m); //행렬 B의 열
     }
     for(int i=0; i<A_n; i++){
         for(int j=0; j<A_m; j++){
-            A_martix[i][j] = rand() % 10;
+            A_martix[i][j] = rand() % 10; //행렬 A의 임의의 값 할당
         }
     }
     for(int i=0; i<B_n; i++){
         for(int j=0; j<B_m; j++){
-            B_martix[i][j] = rand() % 10;
+            B_martix[i][j] = rand() % 10; //행렬 B의 임의의 값 할당
         }
     }
     printf("--- A_matrix --- \n");
