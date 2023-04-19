@@ -21,6 +21,7 @@ typedef enum{
 	minus = 4, /* - 뺄셈 */
 	operand = 1 /* 피연산자 */
 } precedence;
+
 char infixExp[MAX_EXPRESSION_SIZE]; 	
 char postfixExp[MAX_EXPRESSION_SIZE];	
 char postfixStack[MAX_STACK_SIZE];	

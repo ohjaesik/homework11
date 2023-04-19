@@ -27,6 +27,7 @@ void debugQ(QueueType *cQ);
 element getElement();
 
 int main(void)
+
 {
 	QueueType *cQ = createQueue(); //QueueType 포인터 선언 후 createQueue함수 값 할당
 	element data; //element 형 변수 data 선언
