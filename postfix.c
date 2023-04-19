@@ -1,9 +1,9 @@
-/* postfix.c
-혻*
-혻* 혻Data Structures, Homework #5
-혻* 혻School of Computer Science at Chungbuk National University
-혻*/
-
+/**
+ * postfix.c
+ *
+ * School of Computer Science,
+ * Chungbuk National University
+ */
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -11,28 +11,26 @@
 #define MAX_STACK_SIZE 10
 #define MAX_EXPRESSION_SIZE 20
 
-/* stack �댁뿉�� �곗꽑�쒖쐞, lparen = 0 媛��� ��쓬 */
+/* stack 내에서 우선순위는 내림차순, lparen = 0 가장 낮음 */
 typedef enum{
-	lparen = 0,/* ( �쇱そ 愿꾪샇 */
-	rparen = 9, /* ) �ㅻⅨ履� 愿꾪샇*/
-	times = 7,  /* * 怨깆뀍 */
-	divide = 6, /* / �섎닓�� */
-	plus = 5, /* + �㏃뀍 */
-	minus = 4,  /* - 類꾩뀍 */
-	operand = 1 /* �쇱뿰�곗옄 */
+	lparen = 0, /* ( 왼쪽 괄호 */
+	rparen = 9, /* ) 오른쪽 괄호*/
+	times = 7, /* * 곱셈 */
+	divide = 6, /* / 나눗셈 */
+	plus = 5, /* + 덧셈 */
+	minus = 4, /* - 뺄셈 */
+	operand = 1 /* 피연산자 */
 } precedence;
+char infixExp[MAX_EXPRESSION_SIZE]; 	
+char postfixExp[MAX_EXPRESSION_SIZE];	
+char postfixStack[MAX_STACK_SIZE];	
+int evalStack[MAX_STACK_SIZE];		
 
-char infixExp[MAX_EXPRESSION_SIZE]; 	/* infix expression�� ���ν븯�� 諛곗뿴 */
-char postfixExp[MAX_EXPRESSION_SIZE];	/* postfix濡� 蹂�寃쎈맂 臾몄옄�댁쓣 ���ν븯�� 諛곗뿴 */
-char postfixStack[MAX_STACK_SIZE];	/* postfix濡� 蹂��섏쓣 �꾪빐 �꾩슂�� �ㅽ깮 */
-int evalStack[MAX_STACK_SIZE];		/* 怨꾩궛�� �꾪빐 �꾩슂�� �ㅽ깮 */
+int postfixStackTop = -1; 
+int evalStackTop = -1;	 
+int evalResult = 0;	 
 
-int postfixStackTop = -1; /* postfixStack�� top */
-int evalStackTop = -1;	  /* evalStack�� top */
-
-int evalResult = 0;	 /* 怨꾩궛 寃곌낵瑜� ���� */
-
-void postfixpush(char x);
+void postfixpush(char x); // 함수 선언
 char postfixPop();
 void evalPush(int x);
 int evalPop();
@@ -49,7 +47,8 @@ int main()
 {
 	char command;
 
-	do{
+	printf("----- ohjaesik ------ 2022040014-----");
+	do{ // 함수를 사용하기 위한 반복문
 		printf("----------------------------------------------------------------\n");
 		printf(" 혻 혻 혻 혻 혻 혻 혻 Infix to Postfix, then Evaluation 혻 혻 혻 혻 혻 혻 혻 \n");
 		printf("----------------------------------------------------------------\n");
@@ -87,12 +86,12 @@ int main()
 	return 1;
 }
 
-void postfixPush(char x)
+void postfixPush(char x) // postfixPush 구현
 {
     postfixStack[++postfixStackTop] = x;
 }
 
-char postfixPop()
+char postfixPop() // postfixPop 구현
 {
  char x;
  if(postfixStackTop == -1)
@@ -103,12 +102,12 @@ char postfixPop()
  return x;
 }
 
-void evalPush(int x)
+void evalPush(int x) // evalPush 구현
 {
 evalStack[++evalStackTop] = x;
 }
 
-int evalPop()
+int evalPop() //evalPop 구현
 {
 if(evalStackTop == -1)
 return -1;
@@ -117,9 +116,9 @@ return evalStack[evalStackTop--];
 }
 
 /**
-혻* infix expression�� �낅젰諛쏅뒗��.
-혻* infixExp�먮뒗 �낅젰�� 媛믪쓣 ���ν븳��.
-혻*/
+ * infix expression을 입력받는다.
+ * infixExp에는 입력된 값을 저장한다.
+ */
 void getInfix()
 {
 printf("Type the expression >>> ");
@@ -145,8 +144,8 @@ precedence getPriority(char x)
 }
 
 /**
-혻* 臾몄옄�섎굹瑜� �꾨떖諛쏆븘, postfixExp�� 異붽�
-혻*/
+ * 문자하나를 전달받아, postfixExp에 추가
+ */
 void charCat(char* c)
 {
 	if (postfixExp == '\0')
@@ -156,47 +155,43 @@ void charCat(char* c)
 }
 
 /**
-혻* infixExp�� 臾몄옄瑜� �섎굹�� �쎌뼱媛�硫댁꽌 stack�� �댁슜�섏뿬 postfix濡� 蹂�寃쏀븳��.
-혻* 蹂�寃쎈맂 postfix�� postFixExp�� ���λ맂��.
-혻*/
+ * infixExp의 문자를 하나씩 읽어가면서 stack을 이용하여 postfix로 변경한다.
+ * 변경된 postfix는 postFixExp에 저장된다.
+ */
 void toPostfix()
 {
-	/* infixExp�� 臾몄옄 �섎굹�⑹쓣 �쎄린�꾪븳 �ъ씤�� */
+	/* infixExp의 문자 하나씩을 읽기위한 포인터 */
 	char *exp = infixExp;
-	char x; /* 臾몄옄�섎굹瑜� �꾩떆濡� ���ν븯湲� �꾪븳 蹂��� */
-    int idx = 0;
-
-	while(*exp != '\0')
-	{
-        x=getToken(*exp);
-        if(x == operand){
+	int idx = 0;
+	/* exp를 증가시켜가면서, 문자를 읽고 postfix로 변경 */
+	while(*exp != '\0'){ // exp가 끝날 때까지 반복
+        
+        if(getPriority(*exp)== operand){  //exp가 숫자일 경우 배열에 추가
             postfixExp[idx++] = *exp++;
             
         }
-        else if( x==lparen)
+        else if( getPriority(*exp)==lparen) // exp가 '('일 경우 배열에 우선적으로 추가
             postfixPush(*exp++);
-        else if (x==rparen){
+        else if (getToken(*exp)==rparen){ // exp가 ')'가 나왔을 경우 '('가 나올 때까지 기호를 팝함.
             while(getToken(postfixStack[postfixStackTop])!=lparen){
                 postfixExp[idx++] = postfixPop();
             }
-            postfixPop();
+            postfixPop(); // '('을 팝.
             *exp++;
         }
-        else if( postfixStackTop == -1 || getToken(postfixStack[postfixStackTop]) < x){
+        else if( postfixStackTop == -1 || getToken(postfixStack[postfixStackTop]) < getToken(*exp)){ //우선 순위가 큰 기호 스택에 저장
             postfixPush(*exp++);
         }
-        else if(getToken(postfixStack[postfixStackTop]) >= x){
+        else {
+			while(getToken(postfixStack[postfixStackTop]) >= getToken(*exp)){ // 우선 순위가 낮거나 같은 연산자들을 팝함.
             postfixExp[idx++] = postfixPop();
-            
-            postfixPush(*exp++);
-        }
-        else{
-            postfixExp[idx++] = postfixPop();
-            
-        }
+			}
+            postfixPush(*exp++); // 이후 연산자 스택에 저장
+        
+		}
 	}
 
-    while(postfixStackTop != -1){
+    while(postfixStackTop != -1){ // 스택에 저장되어 있는 모든 연산자 출력
         postfixExp[idx++] = postfixPop();
             
     }
@@ -234,12 +229,12 @@ void evaluation()
 {
     int idx=0;
     int x;
-    while(postfixExp[idx] != '\0'){
-        x=getToken(postfixExp[idx]);
-        if(x==operand){
+    while(postfixExp[idx] != '\0'){ // postfix의 끝까지 도는 반복문
+        x=getToken(postfixExp[idx]); //x에 postfixExp 배열의 token값을 할당
+        if(x==operand){ //숫자면 int형으로 바꾸고 저장
             evalPush(postfixExp[idx++] - 48);
         }
-        else{
+        else{ // 연산자가 나왔을 시 연산자에 맞게 계산
             int intger2 = evalPop();
             int intger1 = evalPop();
             if(x==minus){
@@ -257,5 +252,5 @@ void evaluation()
             idx++;
         }
     }
-    evalResult = evalPop();
+    evalResult = evalPop(); // 스택에 첫번째값이 결과 값이므로 결과값을 evalResult에 할당.
 }
