@@ -137,11 +137,11 @@ int freeList(headNode* h){
 /* 새로운 node값을 추가 */
 int insertNode(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode)); //메모리 할당
 	node->key = key;
 	node->link = NULL;
 
-	if (h->first == NULL)
+	if (h->first == NULL) //처음 값이 없을시 처음 값에 삽입
 	{
 		h->first = node;
 		return 0;
@@ -178,18 +178,18 @@ int insertNode(headNode* h, int key) {
  */
 int insertLast(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode)); //메모리 할당
 	node->key = key;
 	node->link = NULL;
 
-	if (h->first == NULL)
+	if (h->first == NULL) //처음 값이 없을 때 처음 값에 삽입
 	{
 		h->first = node;
 		return 0;
 	}
 
 	listNode* n = h->first;
-	while(n->link != NULL) {
+	while(n->link != NULL) { //마지막 노드를 찾는 반복문
 		n = n->link;
 	}
 	n->link = node;
@@ -201,11 +201,11 @@ int insertLast(headNode* h, int key) {
  */
 int insertFirst(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode)); //메모리 할당
 	node->key = key;
 
-	node->link = h->first;
-	h->first = node;
+	node->link = h->first; //원래 처음 값을 삽입된 값에 링크에 연결
+	h->first = node; // 새로 삽입된 값을 처음 링크에 연결
 
 	return 0;
 }
@@ -313,7 +313,7 @@ int invertList(headNode* h) {
 	listNode *trail = NULL;
 	listNode *middle = NULL;
 
-	while(n != NULL){
+	while(n != NULL){ // 가리키는 링크의 방향을 반대로 바꿈.
 		trail = middle;
 		middle = n;
 		n = n->link;
@@ -321,7 +321,7 @@ int invertList(headNode* h) {
 	}
 
 	h->first = middle;
-
+	// head가 가리키는 값을 원래 가장 마지막의 값을 가리키도록 함.
 	return 0;
 }
 
