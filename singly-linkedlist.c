@@ -224,13 +224,13 @@ int deleteNode(headNode* h, int key) {
 	listNode* n = h->first;
 	listNode* trail = NULL;
 
-	/* key瑜� 湲곗��쇰줈 �쎌엯�� �꾩튂瑜� 李얜뒗�� */
+	/* key에 해당하는 노드를 찾는 과정 */
 	while(n != NULL) {
 		if(n->key == key) {
-			/* 泥� �몃뱶 �욎そ�� �쎌엯�댁빞�� 寃쎌슦 �몄� 寃��� */
+			/* 삭제할 노드가 처음 값일 때 두번째 값을 처음 값으로 설정*/
 			if(n == h->first) {
 				h->first = n->link;
-			} else { /* 以묎컙�� 寃쎌슦嫄곕굹 留덉�留됱씤 寃쎌슦 */
+			} else { /* 삭제할 노드 앞의 노드와 뒤의 노드를 연결 */
 				trail->link = n->link;
 			}
 			free(n);
@@ -241,14 +241,14 @@ int deleteNode(headNode* h, int key) {
 		n = n->link;
 	}
 
-	/* 李얠� 紐� �쒓꼍�� */
+	/* key값을 찾지 못했을 때 */
 	printf("cannot find the node for key = %d\n", key);
 	return 0;
 
 }
 
 /**
- * list�� 留덉�留� �몃뱶 ��젣
+ * list의 가장 마지막 값을 삭제
  */
 int deleteLast(headNode* h) {
 
@@ -261,27 +261,27 @@ int deleteLast(headNode* h) {
 	listNode* n = h->first;
 	listNode* trail = NULL;
 
-	/* �몃뱶媛� �섎굹留� �덈뒗 寃쎌슦, 利� first node == last node��  寃쎌슦 泥섎━ */
+	/* 처음노드가 마지막 노드일때 노드를 삭제 */
 	if(n->link == NULL) {
 		h->first = NULL;
 		free(n);
 		return 0;
 	}
 
-	/* 留덉�留� �몃뱶源뚯� �대룞 */
+	/* 가장 마지막 노드를 찾는 과정 */
 	while(n->link != NULL) {
 		trail = n;
 		n = n->link;
 	}
 
-	/* n�� ��젣�섎�濡�, �댁쟾 �몃뱶�� 留곹겕 NULL 泥섎━ */
+	/* 마지막 노드를 가리키는 link를 삭제하고 메모리 해제 */
 	trail->link = NULL;
 	free(n);
 
 	return 0;
 }
 /**
- * list�� 泥ル쾲吏� �몃뱶 ��젣
+ * list의 첫 번재 값을 삭제
  */
 int deleteFirst(headNode* h) {
 
@@ -300,7 +300,7 @@ int deleteFirst(headNode* h) {
 
 
 /**
- * 由ъ뒪�몄쓽 留곹겕瑜� ��닚�쇰줈 �� 諛곗튂
+ * 현재 리스트의 순서를 역방향으로 바꿈
  */
 int invertList(headNode* h) {
 
