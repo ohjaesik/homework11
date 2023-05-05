@@ -47,8 +47,9 @@ int main()
 	char command;
 	int key;
 	headNode* headnode=NULL;
-
+	printf("-------ohjaesik ---------- 2022040014")
 	do{
+		
 		printf("----------------------------------------------------------------\n");
 		printf("                     Doubly Linked  List                        \n");
 		printf("----------------------------------------------------------------\n");
