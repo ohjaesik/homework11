@@ -287,7 +287,35 @@ int invertList(listNode* h) { // n이 NULL이 아닐때 까지 trail에 middle�
 
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(listNode* h, int key) {
+	listNode* node = (listNode*)malloc(sizeof(listNode));
+	node->key = key;
+	node->llink = node->rlink = NULL;
 
+	if(h->rlink==h){ //리스트의 rlink 가 비어있다면 rlink에 삽입.
+		h->rlink = node;
+		node->llink = h;
+		h->llink = node;
+		node->rlink = h;
+		return 0;
+	}
+	listNode* n = h->rlink;
+
+	while(n != NULL && n != h){ //삽입받은 key보다 큰 값을 찾는 반복문.
+		if(n->key >= key){ // 삽입받은 key보다 존재한다면 알맞은 위치에 삽입.
+			if(n == h->rlink){ //n이 rlink와 같다면 가장 앞에 삽입.
+				insertFirst(h,key);
+			}
+			else{ // 그렇지 않다면 node의 rlink에 n, llink에 n->llink 삽입. n->llink->rlink에 node, n->llink에 node 삽입.
+				node->rlink = n;
+				node->llink = n->llink;
+				n->llink->rlink = node;
+				n->llink = node;
+			}
+			return 0;
+		}
+		n = n->rlink;
+	}
+	insertLast(h,key); //반복문이 끝나도 함수가 종료되지 않았을시 가장 뒤에 삽입.
 	return 0;
 }
 
@@ -296,7 +324,30 @@ int insertNode(listNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(listNode* h, int key) {
+	if(h->rlink == h){ //h->rlink가 h라면 삭제할것이없다는것을 출력
+		printf("nothing to delete. \n");
+		return 1;
+	}
 
+	listNode* n = h->rlink;
+	while(n!=NULL && n!= h){ //n을 처음 부터 끝까지 반복하는 반복문.
+		if(n->key == key){ //삭제할 key 값과 노드의 key값이 일치하면
+			if(n == h->rlink){ //만약 처음 노드라면 deleteFirst
+				deleteFirst(h);
+			}
+			else if(n->rlink == NULL){ //마지막 노드라면 deleteLast
+				deleteLast(h);
+			}
+			else{ //그렇지 않다면 n->link->rlink에 n->rlink를 , n->rlink->llink에 n->llink를 연결 후 free
+				n->llink->rlink = n->rlink;
+				n->rlink->llink = n->llink;
+				free(n);
+			}
+			return 1;
+		}
+		n = n->rlink;
+	}
+	printf("cannot find the node for key = %d\n", key); //삭제할 것이 없을 때 문구 출력
 	return 0;
 }
 
