@@ -125,43 +125,43 @@ int initializeBST(Node** h) {
 
 
 
-void inorderTraversal(Node* ptr)
+void inorderTraversal(Node* ptr) //중위 순회로 출력.
 {
 	if(ptr) {
-		inorderTraversal(ptr->left);
-		printf(" [%d] ", ptr->key);
-		inorderTraversal(ptr->right);
+		inorderTraversal(ptr->left); // 왼쪽 노드부터 순회
+		printf(" [%d] ", ptr->key); // ptr의 key 출력
+		inorderTraversal(ptr->right); // 오른쪽 노드 순회
 	}
 }
 
-void preorderTraversal(Node* ptr)
+void preorderTraversal(Node* ptr) //전위 순회로 출력.
 {
 	if(ptr) {
-		printf(" [%d] ", ptr->key);
-		preorderTraversal(ptr->left);
-		preorderTraversal(ptr->right);
+		printf(" [%d] ", ptr->key); // ptr의 값 출력.
+		preorderTraversal(ptr->left); // 왼쪽노드로 이동
+		preorderTraversal(ptr->right); // 오른쪽노드로 이동
 	}
 }
 
 void postorderTraversal(Node* ptr)
 {
 	if(ptr) {
-		postorderTraversal(ptr->left);
-		postorderTraversal(ptr->right);
-		printf(" [%d] ", ptr->key);
+		postorderTraversal(ptr->left); //왼쪽노드로 이동
+		postorderTraversal(ptr->right); // 오른쪽노드로 이동
+		printf(" [%d] ", ptr->key); // ptr의 값 출력
 	}
 }
 
 
 int insert(Node* head, int key)
 {
-	Node* newNode = (Node*)malloc(sizeof(Node));
-	newNode->key = key;
-	newNode->left = NULL;
+	Node* newNode = (Node*)malloc(sizeof(Node)); // 메모리 공간 할당
+	newNode->key = key; // key값 할당
+	newNode->left = NULL; 
 	newNode->right = NULL;
 
-	if (head->left == NULL) {
-		head->left = newNode;
+	if (head->left == NULL) { //head의 노드가 비어있다면
+		head->left = newNode; // head의 왼쪽에 새로운 노드 삽입
 		return 1;
 	}
 
@@ -172,7 +172,7 @@ int insert(Node* head, int key)
 	while(ptr != NULL) {
 
 		/* if there is a node for the key, then just return */
-		if(ptr->key == key) return 1;
+		if(ptr->key == key) return 1; //만약에 이미 key값을 트리가 가지고 있다면 return
 
 		/* we have to move onto children nodes,
 		 * keep tracking the parent using parentNode */
@@ -182,28 +182,28 @@ int insert(Node* head, int key)
 		 * then the new node has to be inserted into the right subtree;
 		 * otherwise the left subtree.
 		 */
-		if(ptr->key < key)
-			ptr = ptr->right;
+		if(ptr->key < key) //현재가리키고 있는 노드의 key값보다 삽입된 key가 크다면
+			ptr = ptr->right; // 오른쪽 자식노드로 이동
 		else
-			ptr = ptr->left;
+			ptr = ptr->left; // 왼쪽 자식노드로 이동
 	}
 
 	/* linking the new node to the parent */
-	if(parentNode->key > key)
+	if(parentNode->key > key) //삽입될 노드가 부모노드보다 작다면 왼쪽
 		parentNode->left = newNode;
 	else
-		parentNode->right = newNode;
+		parentNode->right = newNode; // 오른쪽에 삽입
 	return 1;
 }
 
 int deleteLeafNode(Node* head, int key)
 {
-	if (head == NULL) {
+	if (head == NULL) { //삭제할 것이 없을때
 		printf("\n Nothing to delete!!\n");
 		return -1;
 	}
 
-	if (head->left == NULL) {
+	if (head->left == NULL) { //삭제할 것이 없을때
 		printf("\n Nothing to delete!!\n");
 		return -1;
 	}
@@ -218,43 +218,43 @@ int deleteLeafNode(Node* head, int key)
 
 	while(ptr != NULL) {
 
-		if(ptr->key == key) {
-			if(ptr->left == NULL && ptr->right == NULL) {
+		if(ptr->key == key) { //삭제할 key값을 찾았다면
+			if(ptr->left == NULL && ptr->right == NULL) { //삭제할 노드의 자식노드가 존재하지 않는다면
 
 				/* root node case */
-				if(parentNode == head)
-					head->left = NULL;
+				if(parentNode == head) //부모노드가 head노드라면
+					head->left = NULL; // left노드를 비워준다.
 
 				/* left node case or right case*/
-				if(parentNode->left == ptr)
-					parentNode->left = NULL;
+				if(parentNode->left == ptr) //부모노드의 왼쪽 노드가 삭제할 노드라면
+					parentNode->left = NULL; //왼쪽노드를 비워준다.
 				else
-					parentNode->right = NULL;
+					parentNode->right = NULL; //오른쪽노드를 비워준다.
 
-				free(ptr);
+				free(ptr); //메모리해제
 			}
 			else {
-				printf("the node [%d] is not a leaf \n", ptr->key);
+				printf("the node [%d] is not a leaf \n", ptr->key); //리프노드가 아닐때 출력
 			}
 			return 1;
 		}
 
 		/* keep the parent node */
-		parentNode = ptr;
+		parentNode = ptr; // 부모노드를 현재노드로 바꾸어줌.
 
 		/* key comparison, if current node's key is greater than input key
 		 * then the new node has to be inserted into the right subtree;
 		 * otherwise the left subtree.
 		 */
-		if(ptr->key < key)
-			ptr = ptr->right;
+		if(ptr->key < key) // 삽입된 key값이 더 크면 오른쪽
+			ptr = ptr->right; // 노드로 이동
 		else
-			ptr = ptr->left;
+			ptr = ptr->left; // 왼쪽 노드로 이동
 
 
 	}
 
-	printf("Cannot find the node for key [%d]\n ", key);
+	printf("Cannot find the node for key [%d]\n ", key); // 삭제할 key를 찾지 못했을 때 출력
 
 	return 1;
 }
@@ -264,10 +264,10 @@ Node* searchRecursive(Node* ptr, int key)
 	if(ptr == NULL)
 		return NULL;
 
-	if(ptr->key < key)
-		ptr = searchRecursive(ptr->right, key);
-	else if(ptr->key > key)
-		ptr = searchRecursive(ptr->left, key);
+	if(ptr->key < key) //찾는 key값이 ptr의 Key보다 크면
+		ptr = searchRecursive(ptr->right, key); // 오른쪽 자식노드로 이동
+	else if(ptr->key > key) //작으면
+		ptr = searchRecursive(ptr->left, key); //왼쪽 자식노드로 이동
 
 	/* if ptr->key == key */
 	return ptr;
@@ -278,13 +278,13 @@ Node* searchIterative(Node* head, int key)
 	/* root node */
 	Node* ptr = head->left;
 
-	while(ptr != NULL)
+	while(ptr != NULL) // ptr이 NULL이 아닐때 까지
 	{
-		if(ptr->key == key)
+		if(ptr->key == key) //key값을 찾으면 return
 			return ptr;
 
-		if(ptr->key < key) ptr = ptr->right;
-		else
+		if(ptr->key < key) ptr = ptr->right; //더 크다면 오른쪽 자식노드로 이동
+		else //작다면 왼쪽 자식으로 이동
 			ptr = ptr->left;
 	}
 
@@ -293,7 +293,7 @@ Node* searchIterative(Node* head, int key)
 
 void freeNode(Node* ptr)
 {
-	if(ptr) {
+	if(ptr) { //Leaf노드의 왼쪽노드부터 메모리 해제
 		freeNode(ptr->left);
 		freeNode(ptr->right);
 		free(ptr);
@@ -303,17 +303,17 @@ void freeNode(Node* ptr)
 int freeBST(Node* head)
 {
 
-	if(head->left == head)
-	{
-		free(head);
+	if(head->left == head) //노드가 비어있다면
+	{ 
+		free(head); //head노드의 메모리 해제
 		return 1;
 	}
 
 	Node* p = head->left;
 
-	freeNode(p);
+	freeNode(p); //전체 트리의 메모리 해제
 
-	free(head);
+	free(head); //head노드의 메모리 해제
 	return 1;
 }
 
