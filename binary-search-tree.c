@@ -38,7 +38,7 @@ int main()
 	int key;
 	Node* head = NULL;
 	Node* ptr = NULL;	/* temp */
-
+    printf("------- ohjaesik ---- 2022040014 ------")
 	do{
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
