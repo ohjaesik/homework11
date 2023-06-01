@@ -51,7 +51,7 @@ int main()
 	char command;
 	int key;
 	Node* head = NULL;
-
+    printf("------ 2022040014 ---- ohjaesik -------\n");
 	do{
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
@@ -130,56 +130,56 @@ int initializeBST(Node** h) {
 
 
 
-void recursiveInorder(Node* ptr)
-{
+void recursiveInorder(Node* ptr) //재귀 호출로 inorder 구현
+{ //중위순회
 	if(ptr) {
-		recursiveInorder(ptr->left);
-		printf(" [%d] ", ptr->key);
-		recursiveInorder(ptr->right);
+		recursiveInorder(ptr->left); //왼쪽으로 이동
+		printf(" [%d] ", ptr->key); //왼쪽 리프노드부터 출력딤
+		recursiveInorder(ptr->right); // 오른쪽으로 이동
 	}
 }
 
 /**
  * textbook: p 224
  */
-void iterativeInorder(Node* node)
+void iterativeInorder(Node* node) //반복문으로 inorder 구현
 {
-	for(;;)
+	for(;;) // 무한 반복
 	{
-		for(; node; node = node->left)
+		for(; node; node = node->left) //왼쪽 리프노드에 도달할때까지 stack에 삽입
 			push(node);
-		node = pop();
+		node = pop(); //마지막 노드 pop
 
-		if(!node) break;
-		printf(" [%d] ", node->key);
+		if(!node) break; //노드가 없다면 멈춤 
+		printf(" [%d] ", node->key); // 현재 노드 값 출력
 
-		node = node->right;
+		node = node->right; //노드의 오른쪽 자식으로 이동
 	}
 }
 
 /**
  * textbook: p 225
  */
-void levelOrder(Node* ptr)
+void levelOrder(Node* ptr) //BFS
 {
 	// int front = rear = -1;
 
 	if(!ptr) return; /* empty tree */
 
-	enQueue(ptr);
+	enQueue(ptr); //queue에 노드 삽입
 
 	for(;;)
 	{
-		ptr = deQueue();
+		ptr = deQueue(); //처음 삽입된 노드 추출
 		if(ptr) {
-			printf(" [%d] ", ptr->key);
+			printf(" [%d] ", ptr->key); //노드값 출력
 
-			if(ptr->left)
+			if(ptr->left) //존재한다면 노드의 왼쪽 자식 queue에 삽입
 				enQueue(ptr->left);
-			if(ptr->right)
+			if(ptr->right)// 존재한다면 노드의 오른쪽 자식 queue에 삽입
 				enQueue(ptr->right);
 		}
-		else
+		else // queue가 비었다면 반복문 종료
 			break;
 
 	}
@@ -388,13 +388,13 @@ int freeBST(Node* head)
 
 
 
-Node* pop()
+Node* pop() //stack의 top값 추출.
 {
-	if (top < 0) return NULL;
+	if (top < 0) return NULL; //top이 0보다 작을때
 	return stack[top--];
 }
 
-void push(Node* aNode)
+void push(Node* aNode) // stack의 top에 삽입
 {
 	stack[++top] = aNode;
 }
@@ -411,7 +411,7 @@ void printStack()
 }
 
 
-Node* deQueue()
+Node* deQueue() //stack의 front값 추출
 {
 	if (front == rear) {
 		// printf("\n....Now Queue is empty!!\n" );
@@ -423,7 +423,7 @@ Node* deQueue()
 
 }
 
-void enQueue(Node* aNode)
+void enQueue(Node* aNode) // queue에 rear에 값 삽입
 {
 	rear = (rear + 1) % MAX_QUEUE_SIZE;
 	if (front == rear) {
