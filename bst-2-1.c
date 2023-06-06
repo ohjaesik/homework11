@@ -51,7 +51,7 @@ int main()
 	char command;
 	int key;
 	Node* head = NULL;
-    printf("------ 2022040014 ---- ohjaesik -------\n")
+    printf("------ 2022040014 ---- ohjaesik -------\n");
 	do{
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
